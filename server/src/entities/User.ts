@@ -1,5 +1,5 @@
 //type script voi graphql
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Field, ID, ObjectType } from 'type-graphql'
 // type script voi postgre
 import {
   BaseEntity,
@@ -8,31 +8,31 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from 'typeorm'
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
   @Field(_type => ID)
   @PrimaryGeneratedColumn()
-  id!: number;
+  id!: number
 
   @Field()
   @Column({ unique: true })
-  username!: string;
+  username!: string
 
   @Field()
   @Column({ unique: true })
-  email!: string;
+  email!: string
 
   @Column()
-  password!: string;
+  password!: string
 
   @Field()
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @Field()
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 }

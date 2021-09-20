@@ -9,6 +9,7 @@ import { buildSchema } from 'type-graphql';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import { HelloResolver } from './resolvers/hello';
 import { UserResolver } from './resolvers/user';
+import { ProductResolver } from './resolvers/product';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
@@ -62,7 +63,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver],
+      resolvers: [HelloResolver, UserResolver, ProductResolver],
       validate: false,
     }),
     context: ({ req, res }): Context => ({
