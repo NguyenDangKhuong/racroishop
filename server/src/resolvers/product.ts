@@ -1,15 +1,14 @@
-// import { Context } from '../types/Context'
 import { Product } from '../entities/Product';
-import { Arg, Mutation, Resolver, Query, ID } from 'type-graphql';
+import { Arg, Mutation, Resolver, Query, Ctx, ID, UseMiddleware } from 'type-graphql';
 import { ProductMutationResponse } from '../types/ProductMutationResponse';
-// import { Context } from '../types/Context'
-// import { COOKIE_NAME } from '../constants'
 import { CreateProductInput } from '../types/CreateProductInput';
 import { UpdateProductInput } from '../types/UpdateProductInput';
+import { checkAuth } from '../middleware/checkAuth';
 
 @Resolver()
 export class ProductResolver {
   @Mutation((_returns) => ProductMutationResponse)
+  @UseMiddleware(checkAuth)
   async createProduct(
     @Arg('createProductInput') { title, description, price }: CreateProductInput
   ): Promise<ProductMutationResponse> {
@@ -40,6 +39,7 @@ export class ProductResolver {
   }
 
   @Query((_return) => [Product], { nullable: true })
+  @UseMiddleware(checkAuth)
   async products(): Promise<Product[] | null> {
     try {
       return await Product.find();
@@ -50,6 +50,7 @@ export class ProductResolver {
   }
 
   @Query((_return) => Product, { nullable: true })
+  @UseMiddleware(checkAuth)
   async product(
     @Arg('id', (_type) => ID) id: number
   ): Promise<Product | undefined> {
@@ -63,6 +64,7 @@ export class ProductResolver {
   }
 
   @Mutation((_return) => ProductMutationResponse)
+  @UseMiddleware(checkAuth)
   async updateProduct(
     @Arg('updateProductInput')
     { id, title, description, price }: UpdateProductInput
@@ -91,6 +93,7 @@ export class ProductResolver {
   }
 
   @Mutation((_return) => ProductMutationResponse)
+  @UseMiddleware(checkAuth)
   async deleteProduct(
     @Arg('id', (_type) => ID) id: number
   ): Promise<ProductMutationResponse> {
