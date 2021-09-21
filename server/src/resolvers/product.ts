@@ -1,9 +1,9 @@
+import { Arg, ID, Mutation, Query, Resolver, UseMiddleware } from 'type-graphql';
 import { Product } from '../entities/Product';
-import { Arg, Mutation, Resolver, Query, Ctx, ID, UseMiddleware } from 'type-graphql';
-import { ProductMutationResponse } from '../types/ProductMutationResponse';
-import { CreateProductInput } from '../types/CreateProductInput';
-import { UpdateProductInput } from '../types/UpdateProductInput';
 import { checkAuth } from '../middleware/checkAuth';
+import { CreateProductInput } from '../types/CreateProductInput';
+import { ProductMutationResponse } from '../types/ProductMutationResponse';
+import { UpdateProductInput } from '../types/UpdateProductInput';
 
 @Resolver()
 export class ProductResolver {
