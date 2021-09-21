@@ -2,6 +2,14 @@
   "autoimport.useSemiColon": false,
   "prettier.jsxSingleQuote": true,
   "javascript.format.semicolons": "remove",
+  "typescript.format.semicolons": "remove",
   "editor.formatOnSave": true,
-  "editor.formatOnPaste": true
+  "editor.formatOnPaste": true,
+  "autoimport.semicolon": false,
+  "javascript.format.insertSpaceAfterSemicolonInForStatements": false,
+  "typescript.format.insertSpaceAfterSemicolonInForStatements": false,
+  "typescriptHero.imports.insertSemicolons": false,
+  "typescript.preferences.quoteStyle": "single",
+  "prettier.semi": false,
+  "prettier.trailingComma": "none"
 }

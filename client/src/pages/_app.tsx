@@ -7,7 +7,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
   cache: new InMemoryCache(),
-  credentials: 'includes'
+  credentials: 'include'
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ChakraProvider resetCSS theme={theme}>
         <Component {...pageProps} />
       </ChakraProvider>
-     </ApolloProvider>
+    </ApolloProvider>
   )
 }
 
