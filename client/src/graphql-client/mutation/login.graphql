@@ -1,5 +1,5 @@
-mutation Register($registerInput: RegisterInput!) {
-  register(registerInput: $registerInput) {
+mutation Login($loginInput: LoginInput!) {
+  login(loginInput: $loginInput) {
     code
     success
     message

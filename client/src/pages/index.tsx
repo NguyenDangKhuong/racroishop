@@ -1,9 +1,10 @@
-import Register from './register'
+import NavBar from '../components/NavBar'
 
 const Index = () => (
-  <h1>
-    <Register></Register>
-  </h1>
+  <>
+    <NavBar />
+    <h1></h1>
+  </>
 )
 
 export default Index

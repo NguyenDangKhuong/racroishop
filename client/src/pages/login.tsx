@@ -5,51 +5,57 @@ import React from 'react'
 import InputField from '../components/InputField'
 import Wrapper from '../components/Wrapper'
 import {
+  LoginInput,
   MeDocument,
   MeQuery,
-  RegisterInput,
-  useRegisterMutation
+  useLoginMutation
 } from '../generated/graphql'
 import { mapFieldErrors } from '../helpers/mapFieldError'
 import { useCheckAuth } from '../utils/useCheckAuth'
 
-const Register = () => {
+const Login = () => {
   const router = useRouter()
+
   const { data: authData, loading: authLoading } = useCheckAuth()
-  const initialValues: RegisterInput = {
-    username: '',
-    email: '',
+
+  const initialValues: LoginInput = {
+    usernameOrEmail: '',
     password: ''
   }
 
-  const [registerUser, { loading: _registerUserLoading, data, error }] =
-    useRegisterMutation()
+  const [loginUser, { loading: _loginUserLoading, data, error }] =
+    useLoginMutation()
 
   const toast = useToast()
-
-  const onRegisterSubmit = async (
-    values: RegisterInput,
-    { setErrors }: FormikHelpers<RegisterInput>
+  const onLoginSubmit = async (
+    values: LoginInput,
+    { setErrors }: FormikHelpers<LoginInput>
   ) => {
-    const res = await registerUser({
+    const res = await loginUser({
       variables: {
-        registerInput: values
+        loginInput: values
       },
       update(cache, { data }) {
-        if (data?.register?.success) {
+        // console.log('DATA LOGIN', data)
+
+        // const meData = cache.readQuery({ query: MeDocument })
+        // console.log('MEDATA', meData)
+
+        if (data?.login.success) {
           cache.writeQuery<MeQuery>({
             query: MeDocument,
-            data: { me: data.register.user }
+            data: { me: data.login.user }
           })
         }
       }
     })
-    if (res.data?.register?.errors) {
-      setErrors(mapFieldErrors(res.data.register.errors))
-    } else if (res.data?.register?.user) {
+    if (res.data?.login?.errors) {
+      setErrors(mapFieldErrors(res.data.login.errors))
+    } else if (res.data?.login?.user) {
+      // login successfully
       toast({
-        title: 'Chào mừng',
-        description: `${res.data.register.user.username}`,
+        title: 'Chào mừng trở lại',
+        description: `${res.data.login.user.username}`,
         status: 'success',
         duration: 3000,
         isClosable: true
@@ -57,6 +63,7 @@ const Register = () => {
       router.push('/')
     }
   }
+
   return (
     <>
       {authLoading || (!authLoading && authData?.me) ? (
@@ -65,23 +72,15 @@ const Register = () => {
         </Flex>
       ) : (
         <Wrapper>
-          {error && <p>Đăng kí thất bại. Lỗi máy chủ</p>}
-          <Formik initialValues={initialValues} onSubmit={onRegisterSubmit}>
+          {error && <p>Đăng nhập thất bại. Lỗi máy chủ</p>}
+          <Formik initialValues={initialValues} onSubmit={onLoginSubmit}>
             {({ isSubmitting }) => (
               <Form>
                 <Box mt={4}>
                   <InputField
-                    name='username'
-                    placeholder='Tên Đăng Nhập'
-                    label='Tên Đăng Nhập'
-                  />
-                </Box>
-                <Box mt={4}>
-                  <InputField
-                    name='email'
-                    placeholder='Email'
-                    label='Email'
-                    type='email'
+                    name='usernameOrEmail'
+                    placeholder='Tên Đăng Nhập hoặc Email'
+                    label='Tên Đăng Nhập hoặc Email'
                   />
                 </Box>
                 <Box mt={4}>
@@ -98,7 +97,7 @@ const Register = () => {
                   mt={4}
                   isLoading={isSubmitting}
                 >
-                  Đăng kí
+                  Đăng nhập
                 </Button>
               </Form>
             )}
@@ -109,4 +108,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default Login

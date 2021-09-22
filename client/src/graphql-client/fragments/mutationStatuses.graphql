@@ -1,0 +1,11 @@
+fragment userMutationStatuses on UserMutationResponse {
+  code
+  success
+  message
+}
+
+fragment productMutationStatuses on ProductMutationResponse {
+  code
+  success
+  message
+}

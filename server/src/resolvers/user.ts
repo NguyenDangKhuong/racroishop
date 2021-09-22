@@ -1,6 +1,6 @@
 // import { Context } from '../types/Context'
 import { User } from '../entities/User'
-import { Arg, Mutation, Resolver, Ctx } from 'type-graphql'
+import { Arg, Mutation, Resolver, Ctx, Query } from 'type-graphql'
 import argon2 from 'argon2'
 import { UserMutationResponse } from '../types/UserMutationResponse'
 import { RegisterInput } from '../types/RegisterInput'
@@ -11,6 +11,12 @@ import { COOKIE_NAME } from '../constants'
 
 @Resolver()
 export class UserResolver {
+  @Query((_returns) => User, { nullable: true })
+  async me(@Ctx() { req }: Context): Promise<User | undefined | null> {
+    if (!req.session.userId) return null
+    const user = await User.findOne(req.session.userId)
+    return user
+  }
   @Mutation((_returns) => UserMutationResponse, { nullable: true })
   async register(
     @Arg('registerInput') registerInput: RegisterInput
@@ -82,7 +88,7 @@ export class UserResolver {
           errors: [
             {
               field: 'usernameOrEmail',
-              message: 'Username or email không đúng'
+              message: 'Tài khoản đăng nhập không đúng'
             }
           ]
         }
