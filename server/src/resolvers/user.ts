@@ -164,7 +164,7 @@ export class UserResolver {
     // send reset password link to user via email
     await sendEmail(
       forgotPasswordInput.email,
-      `<a href="http://localhost:3000/change-password?token=${resetToken}&userId=${user.id}">Bấm vào đây để sửa mật khẩu của bạn</a>`
+      `<a href="http://localhost:3002/change-password?token=${resetToken}&userId=${user.id}">Bấm vào đây để sửa mật khẩu của bạn</a>`
     )
 
     return true

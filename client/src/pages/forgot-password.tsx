@@ -32,19 +32,19 @@ const ForgotPassword = () => {
         <Formik initialValues={initialValues} onSubmit={onForgotPasswordSubmit}>
           {({ isSubmitting }) =>
             !loading && data ? (
-              <Box>Please check your inbox</Box>
+              <Box>Xin hãy check mail của bạn</Box>
             ) : (
               <Form>
                 <InputField
                   name='email'
-                  placeholder='Email'
+                  placeholder='Nhập Email của bạn'
                   label='Email'
                   type='email'
                 />
 
                 <Flex mt={2}>
                   <NextLink href='/login'>
-                    <Link ml='auto'>Back to Login</Link>
+                    <Link ml='auto'>Trở về đăng nhập</Link>
                   </NextLink>
                 </Flex>
 
@@ -54,7 +54,7 @@ const ForgotPassword = () => {
                   mt={4}
                   isLoading={isSubmitting}
                 >
-                  Send Reset Password Email
+                  Gửi yêu cầu đổi mật khẩu
                 </Button>
               </Form>
             )
