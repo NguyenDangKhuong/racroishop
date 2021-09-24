@@ -16,6 +16,7 @@ import MongoStore from 'connect-mongo'
 import { COOKIE_NAME, __prod__ } from './constants'
 import { Context } from './types/Context'
 import cors from 'cors'
+import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
   await createConnection({
@@ -27,6 +28,8 @@ const main = async () => {
     synchronize: true,
     entities: [User, Product]
   })
+
+  await sendEmail('khuong@gmail.com', '<b>Hello Khuong</b>')
 
   const app = express()
 
