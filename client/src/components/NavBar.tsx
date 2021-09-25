@@ -40,9 +40,14 @@ const NavBar = () => {
     )
   } else {
     body = (
-      <Button onClick={logoutUser} isLoading={useLogoutMutationLoading}>
-        Đăng xuất
-      </Button>
+      <Flex>
+        <NextLink href='/create-product'>
+          <Button mr={4}>Thêm sản phẩm</Button>
+        </NextLink>
+        <Button onClick={logoutUser} isLoading={useLogoutMutationLoading}>
+          Đăng xuất
+        </Button>
+      </Flex>
     )
   }
 

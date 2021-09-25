@@ -54,7 +54,7 @@ export class CategoryResolver {
 
   @Query(_return => [Category], { nullable: true })
   @UseMiddleware(checkAuth)
-  async categorys(): Promise<Category[] | null> {
+  async categories(): Promise<Category[] | null> {
     try {
       return await Category.find()
     } catch (error) {

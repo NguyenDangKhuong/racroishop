@@ -42,6 +42,7 @@ const Login = () => {
         // const meData = cache.readQuery({ query: MeDocument })
         // console.log('MEDATA', meData)
 
+        //querry lại data me để check user đăng nhập chưa
         if (data?.login.success) {
           cache.writeQuery<MeQuery>({
             query: MeDocument,

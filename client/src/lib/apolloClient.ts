@@ -67,6 +67,7 @@ function createApolloClient(headers: IncomingHttpHeaders | null = null) {
             products: {
               keyArgs: false,
               merge(existing, incoming) {
+                // merge cái hiện có với cái mới
                 let paginatedProducts: Product[] = []
                 if (existing && existing.paginatedProducts) {
                   paginatedProducts = paginatedProducts.concat(
