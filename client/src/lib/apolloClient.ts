@@ -9,11 +9,11 @@ import {
 // import { concatPagination } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
-// import { Post } from '../generated/graphql'
 import { IncomingHttpHeaders } from 'http'
 // import fetch from 'isomorphic-unfetch'
 import { onError } from '@apollo/client/link/error'
 import Router from 'next/router'
+import { Product } from '../generated/graphql'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
@@ -23,7 +23,7 @@ interface IApolloStateProps {
   [APOLLO_STATE_PROP_NAME]?: NormalizedCacheObject
 }
 
-const errorLink = onError((errors) => {
+const errorLink = onError(errors => {
   if (
     errors.graphQLErrors &&
     errors.graphQLErrors[0].extensions?.code === 'UNAUTHENTICATED' &&
@@ -61,29 +61,29 @@ function createApolloClient(headers: IncomingHttpHeaders | null = null) {
     ssrMode: typeof window === 'undefined',
     link: from([errorLink, httpLink]),
     cache: new InMemoryCache({
-      // typePolicies: {
-      //   Query: {
-      //     fields: {
-      //       posts: {
-      //         keyArgs: false,
-      //         merge(existing, incoming) {
-      //           let paginatedPosts: Post[] = []
-      //           if (existing && existing.paginatedPosts) {
-      //             paginatedPosts = paginatedPosts.concat(
-      //               existing.paginatedPosts
-      //             )
-      //           }
-      //           if (incoming && incoming.paginatedPosts) {
-      //             paginatedPosts = paginatedPosts.concat(
-      //               incoming.paginatedPosts
-      //             )
-      //           }
-      //           return { ...incoming, paginatedPosts }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
+      typePolicies: {
+        Query: {
+          fields: {
+            products: {
+              keyArgs: false,
+              merge(existing, incoming) {
+                let paginatedProducts: Product[] = []
+                if (existing && existing.paginatedProducts) {
+                  paginatedProducts = paginatedProducts.concat(
+                    existing.paginatedProducts
+                  )
+                }
+                if (incoming && incoming.paginatedProducts) {
+                  paginatedProducts = paginatedProducts.concat(
+                    incoming.paginatedProducts
+                  )
+                }
+                return { ...incoming, paginatedProducts }
+              }
+            }
+          }
+        }
+      }
     })
   })
 }
@@ -110,9 +110,7 @@ export function initializeApollo(
       // combine arrays using object equality (like in sets)
       arrayMerge: (destinationArray, sourceArray) => [
         ...sourceArray,
-        ...destinationArray.filter((d) =>
-          sourceArray.every((s) => !isEqual(d, s))
-        )
+        ...destinationArray.filter(d => sourceArray.every(s => !isEqual(d, s)))
       ]
     })
 

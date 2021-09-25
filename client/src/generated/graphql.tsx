@@ -136,6 +136,14 @@ export type MutationUpdateProductArgs = {
   updateProductInput: UpdateProductInput;
 };
 
+export type PaginatedProducts = {
+  __typename?: 'PaginatedProducts';
+  cursor: Scalars['DateTime'];
+  hasMore: Scalars['Boolean'];
+  paginatedProducts: Array<Product>;
+  totalCount: Scalars['Float'];
+};
+
 export type Product = {
   __typename?: 'Product';
   category: Category;
@@ -164,7 +172,7 @@ export type Query = {
   hello: Scalars['String'];
   me?: Maybe<User>;
   product?: Maybe<Product>;
-  products?: Maybe<Array<Product>>;
+  products?: Maybe<PaginatedProducts>;
 };
 
 
@@ -175,6 +183,12 @@ export type QueryCategoryArgs = {
 
 export type QueryProductArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryProductsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
 };
 
 export type RegisterInput = {
@@ -275,10 +289,13 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: string, username: string, email: string, role: number }> };
 
-export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
+export type ProductsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products?: Maybe<Array<{ __typename?: 'Product', id: string, title: string, description: string, price: number, createdAt: any, updatedAt: any, category: { __typename?: 'Category', title: string } }>> };
+export type ProductsQuery = { __typename?: 'Query', products?: Maybe<{ __typename?: 'PaginatedProducts', totalCount: number, cursor: any, hasMore: boolean, paginatedProducts: Array<{ __typename?: 'Product', id: string, title: string, description: string, price: number, category: { __typename?: 'Category', title: string } }> }> };
 
 export const ProductMutationStatusesFragmentDoc = gql`
     fragment productMutationStatuses on ProductMutationResponse {
@@ -600,20 +617,17 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const ProductsDocument = gql`
-    query Products {
-  products {
-    id
-    title
-    description
-    price
-    createdAt
-    updatedAt
-    category {
-      title
+    query Products($limit: Int!, $cursor: String) {
+  products(limit: $limit, cursor: $cursor) {
+    totalCount
+    cursor
+    hasMore
+    paginatedProducts {
+      ...productWithCategoryInfo
     }
   }
 }
-    `;
+    ${ProductWithCategoryInfoFragmentDoc}`;
 
 /**
  * __useProductsQuery__
@@ -627,10 +641,12 @@ export const ProductsDocument = gql`
  * @example
  * const { data, loading, error } = useProductsQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */
-export function useProductsQuery(baseOptions?: Apollo.QueryHookOptions<ProductsQuery, ProductsQueryVariables>) {
+export function useProductsQuery(baseOptions: Apollo.QueryHookOptions<ProductsQuery, ProductsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<ProductsQuery, ProductsQueryVariables>(ProductsDocument, options);
       }

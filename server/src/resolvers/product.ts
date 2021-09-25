@@ -28,13 +28,15 @@ export class ProductResolver {
   @Mutation(_returns => ProductMutationResponse)
   @UseMiddleware(checkAuth)
   async createProduct(
-    @Arg('createProductInput') { title, description, price }: CreateProductInput
+    @Arg('createProductInput')
+    { title, description, price, categoryId }: CreateProductInput
   ): Promise<ProductMutationResponse> {
     try {
       const newProduct = Product.create({
         title,
         description,
-        price
+        price,
+        categoryId
         // userId: req.session.userId,
       })
 
@@ -118,8 +120,9 @@ export class ProductResolver {
   @UseMiddleware(checkAuth)
   async updateProduct(
     @Arg('updateProductInput')
-    { id, title, description, price }: UpdateProductInput
-  ): Promise<ProductMutationResponse> {
+    { id, title, description, price, categoryId }: UpdateProductInput
+  ): // @Ctx() { req }: Context
+  Promise<ProductMutationResponse> {
     const existingProduct = await Product.findOne(id)
 
     if (!existingProduct)
@@ -129,9 +132,14 @@ export class ProductResolver {
         message: 'Không tìm thấy sản phẩm'
       }
 
+    // if (existingProduct.userId !== req.session.userId) {
+    //   return { code: 401, success: false, message: 'Lỗi chưa đăng nhập' }
+    // }
+
     existingProduct.title = title
     existingProduct.description = description
     existingProduct.price = Number(price)
+    existingProduct.categoryId = Number(categoryId)
 
     await existingProduct.save()
 
@@ -147,6 +155,7 @@ export class ProductResolver {
   @UseMiddleware(checkAuth)
   async deleteProduct(
     @Arg('id', _type => ID) id: number
+    // @Ctx() { req }: Context
   ): Promise<ProductMutationResponse> {
     const existingProduct = await Product.findOne(id)
 
@@ -156,6 +165,10 @@ export class ProductResolver {
         success: false,
         message: 'Không tìm thấy sản phẩm'
       }
+
+    // if (existingPost.userId !== req.session.userId) {
+    //   return { code: 401, success: false, message: 'Lỗi chưa đăng nhập' }
+    // }
     await Product.delete({ id })
     return { code: 200, success: true, message: 'Sản phẩm đã bị xoá' }
   }

@@ -1,13 +1,10 @@
-query Products {
-  products {
-    id
-    title
-    description
-    price
-    createdAt
-    updatedAt
-    category {
-      title
+query Products($limit: Int!, $cursor: String) {
+  products(limit: $limit, cursor: $cursor) {
+    totalCount
+    cursor
+    hasMore
+    paginatedProducts {
+      ...productWithCategoryInfo
     }
   }
 }

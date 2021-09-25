@@ -2,12 +2,15 @@ import { Field, InputType } from 'type-graphql'
 
 @InputType()
 export class CreateProductInput {
-	@Field()
-	title: string
-
-	@Field()
-	description: string
+  @Field()
+  title: string
 
   @Field()
-	price: number
+  description: string
+
+  @Field()
+  price: number
+
+  @Field()
+  categoryId: number
 }

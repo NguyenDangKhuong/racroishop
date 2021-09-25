@@ -1,5 +1,7 @@
+import { NetworkStatus } from '@apollo/client'
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Link,
@@ -14,20 +16,29 @@ import ProductEditDeleteButtons from '../components/ProductEditDeleteButtons'
 import { ProductsDocument, useProductsQuery } from '../generated/graphql'
 import { addApolloState, initializeApollo } from '../lib/apolloClient'
 
-export const limit = 3
+export const limit = 2
 
 const Index = () => {
-  const { data, loading } = useProductsQuery()
+  const { data, loading, fetchMore, networkStatus } = useProductsQuery({
+    variables: { limit },
+
+    // component nao render boi cai Products query, se rerender khi networkStatus thay doi, tuc la fetchMore
+    notifyOnNetworkStatusChange: true
+  })
+
+  const loadingMoreProducts = networkStatus === NetworkStatus.fetchMore
+
+  const loadMoreProducts = () =>
+    fetchMore({ variables: { cursor: data?.products?.cursor } })
   return (
     <Layout>
-      {loading ? (
-        // && !loadingMoreproducts
+      {loading && !loadingMoreProducts ? (
         <Flex justifyContent='center' alignItems='center' minH='100vh'>
           <Spinner />
         </Flex>
       ) : (
         <Stack spacing={8}>
-          {data?.products?.map(product => (
+          {data?.products?.paginatedProducts.map(product => (
             <Flex key={product.id} p={5} shadow='md' borderWidth='1px'>
               {/* <UpvoteSection product={product} /> */}
               <Box flex={1}>
@@ -52,22 +63,23 @@ const Index = () => {
         </Stack>
       )}
 
-      {/* {data?.products?.hasMore && (
+      {data?.products?.hasMore && (
         <Flex>
           <Button
             m='auto'
             my={8}
-            isLoading={loadingMoreproducts}
-            onClick={loadMoreproducts}
+            isLoading={loadingMoreProducts}
+            onClick={loadMoreProducts}
           >
-            {loadingMoreproducts ? 'Loading' : 'Show more'}
+            {loadingMoreProducts ? 'Đang lấy dữ liệu' : 'Xem thêm'}
           </Button>
         </Flex>
-      )} */}
+      )}
     </Layout>
   )
 }
 
+//for SEO SSR
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {

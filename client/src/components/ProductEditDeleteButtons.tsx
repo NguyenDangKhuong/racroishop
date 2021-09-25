@@ -11,13 +11,13 @@ import { useRouter } from 'next/router'
 
 interface ProductEditDeleteButtonsProps {
   productId: string
-  productUserId: string
+  // productUserId: string
 }
 
 const ProductEditDeleteButtons = ({
-  productId,
-  productUserId
-}: ProductEditDeleteButtonsProps) => {
+  productId
+}: // productUserId
+ProductEditDeleteButtonsProps) => {
   const router = useRouter()
   const { data: meData } = useMeQuery()
   const [deleteProduct, _] = useDeleteProductMutation()
@@ -56,6 +56,7 @@ const ProductEditDeleteButtons = ({
   }
 
   if (meData?.me?.role !== 0) return null
+  // if (meData?.me?.id !== postUserId) return null
 
   return (
     <Box>
