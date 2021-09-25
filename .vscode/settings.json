@@ -11,5 +11,6 @@
   "typescriptHero.imports.insertSemicolons": false,
   "typescript.preferences.quoteStyle": "single",
   "prettier.semi": false,
-  "prettier.trailingComma": "none"
+  "prettier.trailingComma": "none",
+  "prettier.arrowParens": "avoid"
 }

@@ -6,5 +6,8 @@ query Products {
     price
     createdAt
     updatedAt
+    category {
+      title
+    }
   }
 }

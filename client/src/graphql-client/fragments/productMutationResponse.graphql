@@ -1,0 +1,9 @@
+fragment productMutationResponse on ProductMutationResponse {
+  ...productMutationStatuses
+  product {
+    ...productWithCategoryInfo
+  }
+  errors {
+    ...fieldError
+  }
+}

@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.13",
+    "@chakra-ui/icon": "^1.1.11",
     "@chakra-ui/icons": "^1.0.5",
     "@chakra-ui/react": "^1.4.2",
     "@chakra-ui/theme-tools": "1.1.2",

@@ -1,36 +1,29 @@
-//type script voi graphql
 import { Field, ID, ObjectType } from 'type-graphql'
-// type script voi postgre
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
+import { Product } from './Product'
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
-  @Field((_type) => ID)
+export class Category extends BaseEntity {
+  @Field(_type => ID)
   @PrimaryGeneratedColumn()
   id!: number
 
   @Field()
-  @Column({ unique: true })
-  username!: string
-
-  @Field()
-  @Column({ unique: true })
-  email!: string
-
-  @Field()
   @Column()
-  role!: number
+  title!: string
 
-  @Column()
-  password!: string
+  @Field(_type => [Product])
+  @OneToMany(() => Product, product => product.category)
+  products: Product[]
 
   @Field()
   @CreateDateColumn()

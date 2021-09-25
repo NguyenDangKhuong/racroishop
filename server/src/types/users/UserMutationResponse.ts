@@ -1,7 +1,7 @@
-import { User } from '../entities/User'
+import { User } from '../../entities/User'
 import { Field, ObjectType } from 'type-graphql'
-import { FieldError } from './FieldError'
-import { IMutationResponse } from './MutationResponse'
+import { FieldError } from '../FieldError'
+import { IMutationResponse } from '../MutationResponse'
 
 @ObjectType({ implements: IMutationResponse })
 export class UserMutationResponse implements IMutationResponse {

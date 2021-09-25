@@ -1,21 +1,23 @@
 require('dotenv').config()
-import 'reflect-metadata'
-import express from 'express'
-import { createConnection } from 'typeorm'
-import { User } from './entities/User'
-import { Product } from './entities/Product'
-import { ApolloServer } from 'apollo-server-express'
-import { buildSchema } from 'type-graphql'
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core'
-import { HelloResolver } from './resolvers/hello'
-import { UserResolver } from './resolvers/user'
-import { ProductResolver } from './resolvers/product'
-import mongoose from 'mongoose'
-import session from 'express-session'
+import { ApolloServer } from 'apollo-server-express'
 import MongoStore from 'connect-mongo'
-import { COOKIE_NAME, __prod__ } from './constants'
-import { Context } from './types/Context'
 import cors from 'cors'
+import express from 'express'
+import session from 'express-session'
+import mongoose from 'mongoose'
+import 'reflect-metadata'
+import { buildSchema } from 'type-graphql'
+import { createConnection } from 'typeorm'
+import { COOKIE_NAME, __prod__ } from './constants'
+import { Category } from './entities/Category'
+import { Product } from './entities/Product'
+import { User } from './entities/User'
+import { CategoryResolver } from './resolvers/category'
+import { HelloResolver } from './resolvers/hello'
+import { ProductResolver } from './resolvers/product'
+import { UserResolver } from './resolvers/user'
+import { Context } from './types/Context'
 import { sendEmail } from './utils/sendEmail'
 
 const main = async () => {
@@ -26,7 +28,7 @@ const main = async () => {
     password: process.env.DB_PASSWORD_DEV,
     logging: true,
     synchronize: true,
-    entities: [User, Product]
+    entities: [User, Product, Category]
   })
 
   await sendEmail('khuong@gmail.com', '<b>Hello Khuong</b>')
@@ -74,7 +76,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver, ProductResolver],
+      resolvers: [
+        HelloResolver,
+        UserResolver,
+        ProductResolver,
+        CategoryResolver
+      ],
       validate: false
     }),
     context: ({ req, res }): Context => ({

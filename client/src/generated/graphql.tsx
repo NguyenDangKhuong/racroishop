@@ -16,8 +16,30 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Category = {
+  __typename?: 'Category';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  products: Array<Product>;
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type CategoryMutationResponse = IMutationResponse & {
+  __typename?: 'CategoryMutationResponse';
+  category?: Maybe<Category>;
+  code: Scalars['Float'];
+  errors?: Maybe<Array<FieldError>>;
+  message?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
+};
+
 export type ChangePasswordInput = {
   newPassword: Scalars['String'];
+};
+
+export type CreateCategoryInput = {
+  title: Scalars['String'];
 };
 
 export type CreateProductInput = {
@@ -50,12 +72,15 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: UserMutationResponse;
+  createCategory: CategoryMutationResponse;
   createProduct: ProductMutationResponse;
+  deleteCategory: CategoryMutationResponse;
   deleteProduct: ProductMutationResponse;
   forgotPassword: Scalars['Boolean'];
   login: UserMutationResponse;
   logout: Scalars['Boolean'];
   register?: Maybe<UserMutationResponse>;
+  updateCategory: CategoryMutationResponse;
   updateProduct: ProductMutationResponse;
 };
 
@@ -67,8 +92,18 @@ export type MutationChangePasswordArgs = {
 };
 
 
+export type MutationCreateCategoryArgs = {
+  createCategoryInput: CreateCategoryInput;
+};
+
+
 export type MutationCreateProductArgs = {
   createProductInput: CreateProductInput;
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -92,12 +127,19 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationUpdateCategoryArgs = {
+  updateCategoryInput: UpdateCategoryInput;
+};
+
+
 export type MutationUpdateProductArgs = {
   updateProductInput: UpdateProductInput;
 };
 
 export type Product = {
   __typename?: 'Product';
+  category: Category;
+  categoryId: Scalars['Float'];
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['ID'];
@@ -117,10 +159,17 @@ export type ProductMutationResponse = IMutationResponse & {
 
 export type Query = {
   __typename?: 'Query';
+  category?: Maybe<Category>;
+  categorys?: Maybe<Array<Category>>;
   hello: Scalars['String'];
   me?: Maybe<User>;
   product?: Maybe<Product>;
   products?: Maybe<Array<Product>>;
+};
+
+
+export type QueryCategoryArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -132,6 +181,11 @@ export type RegisterInput = {
   email: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
+};
+
+export type UpdateCategoryInput = {
+  id: Scalars['ID'];
+  title: Scalars['String'];
 };
 
 export type UpdateProductInput = {
@@ -146,6 +200,7 @@ export type User = {
   createdAt: Scalars['DateTime'];
   email: Scalars['String'];
   id: Scalars['ID'];
+  role: Scalars['Float'];
   updatedAt: Scalars['DateTime'];
   username: Scalars['String'];
 };
@@ -165,9 +220,13 @@ export type UserMutationStatusesFragment = { __typename?: 'UserMutationResponse'
 
 export type ProductMutationStatusesFragment = { __typename?: 'ProductMutationResponse', code: number, success: boolean, message?: Maybe<string> };
 
-export type UserInfoFragment = { __typename?: 'User', id: string, username: string, email: string };
+export type ProductMutationResponseFragment = { __typename?: 'ProductMutationResponse', code: number, success: boolean, message?: Maybe<string>, product?: Maybe<{ __typename?: 'Product', id: string, title: string, description: string, price: number, category: { __typename?: 'Category', title: string } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> };
 
-export type UserMutationResponseFragment = { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> };
+export type ProductWithCategoryInfoFragment = { __typename?: 'Product', id: string, title: string, description: string, price: number, category: { __typename?: 'Category', title: string } };
+
+export type UserInfoFragment = { __typename?: 'User', id: string, username: string, email: string, role: number };
+
+export type UserMutationResponseFragment = { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string, role: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> };
 
 export type ChangePasswordMutationVariables = Exact<{
   userId: Scalars['String'];
@@ -176,7 +235,14 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string, role: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+
+export type DeleteProductMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteProductMutation = { __typename?: 'Mutation', deleteProduct: { __typename?: 'ProductMutationResponse', code: number, success: boolean, message?: Maybe<string> } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   forgotPasswordInput: ForgotPasswordInput;
@@ -190,7 +256,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string, role: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -202,17 +268,17 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register?: Maybe<{ __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> }> };
+export type RegisterMutation = { __typename?: 'Mutation', register?: Maybe<{ __typename?: 'UserMutationResponse', code: number, success: boolean, message?: Maybe<string>, user?: Maybe<{ __typename?: 'User', id: string, username: string, email: string, role: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string }>> }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: string, username: string, email: string }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: string, username: string, email: string, role: number }> };
 
 export type ProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductsQuery = { __typename?: 'Query', products?: Maybe<Array<{ __typename?: 'Product', id: string, title: string, description: string, price: number, createdAt: any, updatedAt: any }>> };
+export type ProductsQuery = { __typename?: 'Query', products?: Maybe<Array<{ __typename?: 'Product', id: string, title: string, description: string, price: number, createdAt: any, updatedAt: any, category: { __typename?: 'Category', title: string } }>> };
 
 export const ProductMutationStatusesFragmentDoc = gql`
     fragment productMutationStatuses on ProductMutationResponse {
@@ -221,6 +287,36 @@ export const ProductMutationStatusesFragmentDoc = gql`
   message
 }
     `;
+export const ProductWithCategoryInfoFragmentDoc = gql`
+    fragment productWithCategoryInfo on Product {
+  id
+  title
+  description
+  price
+  category {
+    title
+  }
+}
+    `;
+export const FieldErrorFragmentDoc = gql`
+    fragment fieldError on FieldError {
+  field
+  message
+}
+    `;
+export const ProductMutationResponseFragmentDoc = gql`
+    fragment productMutationResponse on ProductMutationResponse {
+  ...productMutationStatuses
+  product {
+    ...productWithCategoryInfo
+  }
+  errors {
+    ...fieldError
+  }
+}
+    ${ProductMutationStatusesFragmentDoc}
+${ProductWithCategoryInfoFragmentDoc}
+${FieldErrorFragmentDoc}`;
 export const UserMutationStatusesFragmentDoc = gql`
     fragment userMutationStatuses on UserMutationResponse {
   code
@@ -233,12 +329,7 @@ export const UserInfoFragmentDoc = gql`
   id
   username
   email
-}
-    `;
-export const FieldErrorFragmentDoc = gql`
-    fragment fieldError on FieldError {
-  field
-  message
+  role
 }
     `;
 export const UserMutationResponseFragmentDoc = gql`
@@ -293,6 +384,39 @@ export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export const DeleteProductDocument = gql`
+    mutation DeleteProduct($id: ID!) {
+  deleteProduct(id: $id) {
+    ...productMutationStatuses
+  }
+}
+    ${ProductMutationStatusesFragmentDoc}`;
+export type DeleteProductMutationFn = Apollo.MutationFunction<DeleteProductMutation, DeleteProductMutationVariables>;
+
+/**
+ * __useDeleteProductMutation__
+ *
+ * To run a mutation, you first call `useDeleteProductMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteProductMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteProductMutation, { data, loading, error }] = useDeleteProductMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteProductMutation(baseOptions?: Apollo.MutationHookOptions<DeleteProductMutation, DeleteProductMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteProductMutation, DeleteProductMutationVariables>(DeleteProductDocument, options);
+      }
+export type DeleteProductMutationHookResult = ReturnType<typeof useDeleteProductMutation>;
+export type DeleteProductMutationResult = Apollo.MutationResult<DeleteProductMutation>;
+export type DeleteProductMutationOptions = Apollo.BaseMutationOptions<DeleteProductMutation, DeleteProductMutationVariables>;
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($forgotPasswordInput: ForgotPasswordInput!) {
   forgotPassword(forgotPasswordInput: $forgotPasswordInput)
@@ -334,6 +458,7 @@ export const LoginDocument = gql`
       id
       username
       email
+      role
     }
     errors {
       field
@@ -483,6 +608,9 @@ export const ProductsDocument = gql`
     price
     createdAt
     updatedAt
+    category {
+      title
+    }
   }
 }
     `;

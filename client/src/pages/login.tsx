@@ -72,7 +72,7 @@ const Login = () => {
           <Spinner />
         </Flex>
       ) : (
-        <Wrapper>
+        <Wrapper size='small'>
           {error && <p>Đăng nhập thất bại. Lỗi máy chủ</p>}
           <Formik initialValues={initialValues} onSubmit={onLoginSubmit}>
             {({ isSubmitting }) => (

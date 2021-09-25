@@ -2,27 +2,27 @@
 import { User } from '../entities/User'
 import { Arg, Mutation, Resolver, Ctx, Query } from 'type-graphql'
 import argon2 from 'argon2'
-import { UserMutationResponse } from '../types/UserMutationResponse'
-import { RegisterInput } from '../types/RegisterInput'
-import { LoginInput } from '../types/LoginInput'
+import { UserMutationResponse } from '../types/users/UserMutationResponse'
+import { RegisterInput } from '../types/users/RegisterInput'
+import { LoginInput } from '../types/users/LoginInput'
 import { validateRegisterInput } from '../utils/validateRegisterInput'
 import { Context } from '../types/Context'
 import { COOKIE_NAME } from '../constants'
 import { TokenModel } from '../models/Token'
-import { ChangePasswordInput } from '../types/ChangePasswordInput'
-import { ForgotPasswordInput } from '../types/ForgotPassword'
+import { ChangePasswordInput } from '../types/users/ChangePasswordInput'
+import { ForgotPasswordInput } from '../types/users/ForgotPassword'
 import { v4 as uuidv4 } from 'uuid'
 import { sendEmail } from '../utils/sendEmail'
 
 @Resolver()
 export class UserResolver {
-  @Query((_returns) => User, { nullable: true })
+  @Query(_returns => User, { nullable: true })
   async me(@Ctx() { req }: Context): Promise<User | undefined | null> {
     if (!req.session.userId) return null
     const user = await User.findOne(req.session.userId)
     return user
   }
-  @Mutation((_returns) => UserMutationResponse, { nullable: true })
+  @Mutation(_returns => UserMutationResponse, { nullable: true })
   async register(
     @Arg('registerInput') registerInput: RegisterInput
   ): Promise<UserMutationResponse> {
@@ -73,7 +73,7 @@ export class UserResolver {
     }
   }
 
-  @Mutation((_return) => UserMutationResponse)
+  @Mutation(_return => UserMutationResponse)
   async login(
     @Arg('loginInput') { usernameOrEmail, password }: LoginInput,
     @Ctx() { req }: Context
@@ -127,12 +127,12 @@ export class UserResolver {
     }
   }
 
-  @Mutation((_return) => Boolean)
+  @Mutation(_return => Boolean)
   logout(@Ctx() { req, res }: Context): Promise<boolean> {
     return new Promise((resolve, _reject) => {
       res.clearCookie(COOKIE_NAME)
 
-      req.session.destroy((error) => {
+      req.session.destroy(error => {
         if (error) {
           console.log('Lỗi huỷ session:', error)
           resolve(false)
@@ -142,7 +142,7 @@ export class UserResolver {
     })
   }
 
-  @Mutation((_return) => Boolean)
+  @Mutation(_return => Boolean)
   async forgotPassword(
     @Arg('forgotPasswordInput') forgotPasswordInput: ForgotPasswordInput
   ): Promise<boolean> {
@@ -170,7 +170,7 @@ export class UserResolver {
     return true
   }
 
-  @Mutation((_return) => UserMutationResponse)
+  @Mutation(_return => UserMutationResponse)
   async changePassword(
     @Arg('token') token: string,
     @Arg('userId') userId: string,

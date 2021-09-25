@@ -4,34 +4,44 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  UpdateDateColumn
+} from 'typeorm'
+import { Category } from './Category'
 
 @ObjectType()
 @Entity()
 export class Product extends BaseEntity {
   @Field(_type => ID)
   @PrimaryGeneratedColumn()
-  id!: number;
+  id!: number
 
   @Field()
   @Column()
-  title!: string;
+  title!: string
 
   @Field()
   @Column()
-  price!: number;
+  price!: number
 
   @Field()
   @Column()
-  description!: string;
+  description!: string
 
   @Field()
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column()
+  categoryId!: number
+
+  @Field(_type => Category)
+  @ManyToOne(() => Category, category => category.products)
+  category: Category
 
   @Field()
-  @UpdateDateColumn()
-  updatedAt: Date;
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date
+
+  @Field()
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date
 }
