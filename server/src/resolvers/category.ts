@@ -47,7 +47,7 @@ export class CategoryResolver {
       return {
         code: 500,
         success: false,
-        message: `Internal server error ${error.message}`
+        message: `Lỗi hệ thống: ${error.message}`
       }
     }
   }

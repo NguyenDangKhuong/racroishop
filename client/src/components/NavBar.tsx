@@ -1,12 +1,14 @@
+import { Box, Flex, Heading, Link, Button } from '@chakra-ui/react'
 import NextLink from 'next/link'
-import { Box, Heading, Flex, Link, Button } from '@chakra-ui/react'
 import {
   MeDocument,
   MeQuery,
   useLogoutMutation,
   useMeQuery
 } from '../generated/graphql'
-const NavBar = () => {
+import { Reference, gql } from '@apollo/client'
+
+const Navbar = () => {
   const { data, loading: useMeQueryLoading } = useMeQuery()
   const [logout, { loading: useLogoutMutationLoading }] = useLogoutMutation()
 
@@ -17,6 +19,28 @@ const NavBar = () => {
           cache.writeQuery<MeQuery>({
             query: MeDocument,
             data: { me: null }
+          })
+
+          cache.modify({
+            fields: {
+              products(existing) {
+                existing.paginatedProducts.forEach((product: Reference) => {
+                  cache.writeFragment({
+                    id: product.__ref, // `Product:17`
+                    fragment: gql`
+                      fragment LikeType on Product {
+                        likeType
+                      }
+                    `,
+                    data: {
+                      likeType: 0
+                    }
+                  })
+                })
+
+                return existing
+              }
+            }
           })
         }
       }
@@ -34,7 +58,7 @@ const NavBar = () => {
           <Link mr={2}>Đăng nhập</Link>
         </NextLink>
         <NextLink href='/register'>
-          <Link mr={2}>Đăng kí</Link>
+          <Link>Đăng kí</Link>
         </NextLink>
       </>
     )
@@ -42,7 +66,7 @@ const NavBar = () => {
     body = (
       <Flex>
         <NextLink href='/create-product'>
-          <Button mr={4}>Thêm sản phẩm</Button>
+          <Button mr={4}>Tạo sản phẩm</Button>
         </NextLink>
         <Button onClick={logoutUser} isLoading={useLogoutMutationLoading}>
           Đăng xuất
@@ -55,7 +79,7 @@ const NavBar = () => {
     <Box bg='tan' p={4}>
       <Flex maxW={800} justifyContent='space-between' align='center' m='auto'>
         <NextLink href='/'>
-          <Heading>RacRoiShop</Heading>
+          <Heading>Rắc Rối Shop</Heading>
         </NextLink>
         <Box>{body}</Box>
       </Flex>
@@ -63,4 +87,4 @@ const NavBar = () => {
   )
 }
 
-export default NavBar
+export default Navbar

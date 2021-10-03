@@ -5,7 +5,7 @@ import { Ctx, Query, Resolver } from 'type-graphql'
 export class HelloResolver {
 	@Query(_returns => String)
 	hello(@Ctx() { req }: Context) {
-		console.log(req.session)
+		console.log(req.session.userId)
 		return 'hello world'
 	}
 }

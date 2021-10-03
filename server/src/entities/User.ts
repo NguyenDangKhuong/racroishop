@@ -6,14 +6,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
+import { Like } from './Like'
+import { Product } from './Product'
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-  @Field((_type) => ID)
+  @Field(_type => ID)
   @PrimaryGeneratedColumn()
   id!: number
 
@@ -26,11 +29,17 @@ export class User extends BaseEntity {
   email!: string
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   role!: number
 
   @Column()
   password!: string
+
+  @OneToMany(() => Product, product => product.user)
+  products: Product[]
+
+  @OneToMany(_to => Like, like => like.user)
+  likes: Like[]
 
   @Field()
   @CreateDateColumn()

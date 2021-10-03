@@ -1,44 +1,59 @@
-// import { Context } from '../types/Context'
-import { User } from '../entities/User'
-import { Arg, Mutation, Resolver, Ctx, Query } from 'type-graphql'
 import argon2 from 'argon2'
-import { UserMutationResponse } from '../types/users/UserMutationResponse'
-import { RegisterInput } from '../types/users/RegisterInput'
-import { LoginInput } from '../types/users/LoginInput'
-import { validateRegisterInput } from '../utils/validateRegisterInput'
-import { Context } from '../types/Context'
+import {
+  Arg,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root
+} from 'type-graphql'
+import { v4 as uuidv4 } from 'uuid'
 import { COOKIE_NAME } from '../constants'
+import { User } from '../entities/User'
 import { TokenModel } from '../models/Token'
+import { Context } from '../types/Context'
 import { ChangePasswordInput } from '../types/users/ChangePasswordInput'
 import { ForgotPasswordInput } from '../types/users/ForgotPassword'
-import { v4 as uuidv4 } from 'uuid'
+import { LoginInput } from '../types/users/LoginInput'
+import { RegisterInput } from '../types/users/RegisterInput'
+import { UserMutationResponse } from '../types/users/UserMutationResponse'
 import { sendEmail } from '../utils/sendEmail'
+import { validateRegisterInput } from '../utils/validateRegisterInput'
 
-@Resolver()
+@Resolver(_of => User)
 export class UserResolver {
-  @Query(_returns => User, { nullable: true })
+  @FieldResolver(_return => String)
+  email(@Root() user: User, @Ctx() { req }: Context) {
+    return req.session.userId === user.id ? user.email : ''
+  }
+
+  @Query(_return => User, { nullable: true })
   async me(@Ctx() { req }: Context): Promise<User | undefined | null> {
     if (!req.session.userId) return null
     const user = await User.findOne(req.session.userId)
     return user
   }
-  @Mutation(_returns => UserMutationResponse, { nullable: true })
+
+  @Mutation(_return => UserMutationResponse)
   async register(
-    @Arg('registerInput') registerInput: RegisterInput
+    @Arg('registerInput') registerInput: RegisterInput,
+    @Ctx() { req }: Context
   ): Promise<UserMutationResponse> {
     const validateRegisterInputErrors = validateRegisterInput(registerInput)
     if (validateRegisterInputErrors !== null)
       return { code: 400, success: false, ...validateRegisterInputErrors }
+
     try {
       const { username, email, password } = registerInput
       const existingUser = await User.findOne({
         where: [{ username }, { email }]
       })
-      if (existingUser) {
+      if (existingUser)
         return {
           code: 400,
           success: false,
-          message: 'Tài khoản đã được đăng kí',
+          message: 'Tên người dùng hoác email đã được đăng kí',
           errors: [
             {
               field: existingUser.username === username ? 'username' : 'email',
@@ -48,27 +63,31 @@ export class UserResolver {
             }
           ]
         }
-      }
 
       const hashedPassword = await argon2.hash(password)
 
       const newUser = User.create({
         username,
-        email,
-        password: hashedPassword
+        password: hashedPassword,
+        email
       })
+
+      await newUser.save()
+
+      req.session.userId = newUser.id
+
       return {
         code: 200,
         success: true,
         message: 'Đã đăng kí tài khoản thành công',
-        user: await User.save(newUser)
+        user: newUser
       }
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      console.log(error)
       return {
         code: 500,
         success: false,
-        message: `Lỗi hệ thống ${err.message}`
+        message: `Lỗi hệ thống: ${error.message}`
       }
     }
   }
@@ -122,7 +141,7 @@ export class UserResolver {
       return {
         code: 500,
         success: false,
-        message: `Lỗi hệ thống ${error.message}`
+        message: `Lỗi hệ thống: ${error.message}`
       }
     }
   }
@@ -164,7 +183,7 @@ export class UserResolver {
     // send reset password link to user via email
     await sendEmail(
       forgotPasswordInput.email,
-      `<a href="http://localhost:3002/change-password?token=${resetToken}&userId=${user.id}">Bấm vào đây để sửa mật khẩu của bạn</a>`
+      `<a href="http://localhost:3001/change-password?token=${resetToken}&userId=${user.id}">Bấm vào đây để sửa mật khẩu của bạn</a>`
     )
 
     return true
@@ -256,7 +275,7 @@ export class UserResolver {
       return {
         code: 500,
         success: false,
-        message: `Lỗi hệ thống ${error.message}`
+        message: `Lỗi hệ thống: ${error.message}`
       }
     }
   }

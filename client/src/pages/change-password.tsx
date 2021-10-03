@@ -18,7 +18,7 @@ import {
   AlertTitle
 } from '@chakra-ui/react'
 import router, { useRouter } from 'next/router'
-import { mapFieldErrors } from '../helpers/mapFieldError'
+import { mapFieldErrors } from '../helpers/mapFieldErrors'
 import { useState } from 'react'
 import NextLink from 'next/link'
 import { useCheckAuth } from '../utils/useCheckAuth'

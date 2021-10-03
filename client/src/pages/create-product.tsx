@@ -1,5 +1,5 @@
 import { useCheckAuth } from '../utils/useCheckAuth'
-import { Flex, Spinner, Box, Button, Select } from '@chakra-ui/react'
+import { Flex, Spinner, Box, Button } from '@chakra-ui/react'
 import Layout from '../components/Layout'
 import { Formik, Form } from 'formik'
 import InputField from '../components/InputField'
@@ -17,13 +17,15 @@ const CreateProduct = () => {
   const { data: categoriesData } = useCategoriesQuery()
 
   const initialValues = { title: '', description: '', price: 0, categoryId: 0 }
-
   const [createProduct, _] = useCreateProductMutation()
 
   const onCreateProductSubmit = async (values: CreateProductInput) => {
     await createProduct({
       variables: {
-        createProductInput: { ...values, categoryId: Number(values.categoryId) }
+        createProductInput: {
+          ...values,
+          categoryId: Number(values.categoryId)
+        }
       },
       update(cache, { data }) {
         cache.modify({
@@ -102,6 +104,7 @@ const CreateProduct = () => {
                   ))}
                 />
               </Box>
+
               <Flex justifyContent='space-between' alignItems='center' mt={4}>
                 <Button
                   type='submit'
@@ -111,7 +114,7 @@ const CreateProduct = () => {
                   Thêm sản phẩm mới
                 </Button>
                 <NextLink href='/'>
-                  <Button>Trở lại trang danh sách</Button>
+                  <Button>Trở lại trang chủ</Button>
                 </NextLink>
               </Flex>
             </Form>

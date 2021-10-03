@@ -9,11 +9,11 @@ import {
 // import { concatPagination } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
+import { Product } from '../generated/graphql'
 import { IncomingHttpHeaders } from 'http'
-// import fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 import { onError } from '@apollo/client/link/error'
 import Router from 'next/router'
-import { Product } from '../generated/graphql'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
@@ -67,18 +67,21 @@ function createApolloClient(headers: IncomingHttpHeaders | null = null) {
             products: {
               keyArgs: false,
               merge(existing, incoming) {
-                // merge cái hiện có với cái mới
+                // merge cái hiện có với cái mới để lấy thêm sản phẩm khi nhấn xem thêm
                 let paginatedProducts: Product[] = []
+
                 if (existing && existing.paginatedProducts) {
                   paginatedProducts = paginatedProducts.concat(
                     existing.paginatedProducts
                   )
                 }
+
                 if (incoming && incoming.paginatedProducts) {
                   paginatedProducts = paginatedProducts.concat(
                     incoming.paginatedProducts
                   )
                 }
+
                 return { ...incoming, paginatedProducts }
               }
             }

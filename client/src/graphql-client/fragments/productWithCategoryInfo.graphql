@@ -3,6 +3,12 @@ fragment productWithCategoryInfo on Product {
   title
   description
   price
+  points
+  likeType
+  user {
+    username
+    id
+  }
   category {
     title
   }

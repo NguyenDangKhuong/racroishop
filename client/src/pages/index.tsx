@@ -15,8 +15,9 @@ import Layout from '../components/Layout'
 import ProductEditDeleteButtons from '../components/ProductEditDeleteButtons'
 import { ProductsDocument, useProductsQuery } from '../generated/graphql'
 import { addApolloState, initializeApollo } from '../lib/apolloClient'
+import LikeSection from '../components/LikeSection'
 
-export const limit = 2
+export const limit = 3
 
 const Index = () => {
   const { data, loading, fetchMore, networkStatus } = useProductsQuery({
@@ -30,6 +31,7 @@ const Index = () => {
 
   const loadMoreProducts = () =>
     fetchMore({ variables: { cursor: data?.products?.cursor } })
+
   return (
     <Layout>
       {loading && !loadingMoreProducts ? (
@@ -40,20 +42,20 @@ const Index = () => {
         <Stack spacing={8}>
           {data?.products?.paginatedProducts.map(product => (
             <Flex key={product.id} p={5} shadow='md' borderWidth='1px'>
-              {/* <UpvoteSection product={product} /> */}
+              <LikeSection product={product} />
               <Box flex={1}>
                 <NextLink href={`/product/${product.id}`}>
                   <Link>
                     <Heading fontSize='xl'>{product.title}</Heading>
                   </Link>
                 </NextLink>
-                <Text>producted by {product.category.title}</Text>
+                <Text>producted by {product.user.username}</Text>
                 <Flex align='center'>
-                  <Text mt={4}>{product.description}</Text>
+                  {/* <Text mt={4}>{product.textSnippet}</Text> */}
                   <Box ml='auto'>
                     <ProductEditDeleteButtons
                       productId={product.id}
-                      // productUserId={product.user.id}
+                      productUserId={product.user.id}
                     />
                   </Box>
                 </Flex>
@@ -71,7 +73,7 @@ const Index = () => {
             isLoading={loadingMoreProducts}
             onClick={loadMoreProducts}
           >
-            {loadingMoreProducts ? 'Đang lấy dữ liệu' : 'Xem thêm'}
+            {loadingMoreProducts ? 'Đang tải' : 'Xem thêm'}
           </Button>
         </Flex>
       )}
@@ -79,7 +81,6 @@ const Index = () => {
   )
 }
 
-//for SEO SSR
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {

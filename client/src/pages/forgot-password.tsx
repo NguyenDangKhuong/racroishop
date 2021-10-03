@@ -37,7 +37,7 @@ const ForgotPassword = () => {
               <Form>
                 <InputField
                   name='email'
-                  placeholder='Nhập Email của bạn'
+                  placeholder='Email'
                   label='Email'
                   type='email'
                 />

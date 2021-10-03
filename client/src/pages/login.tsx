@@ -1,8 +1,7 @@
-import { Box, Button, Flex, Link, Spinner, useToast } from '@chakra-ui/react'
+import { Box, Button, Spinner, Flex, useToast, Link } from '@chakra-ui/react'
+import NextLink from 'next/link'
 import { Form, Formik, FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
-import NextLink from 'next/link'
-import React from 'react'
 import InputField from '../components/InputField'
 import Wrapper from '../components/Wrapper'
 import {
@@ -11,28 +10,26 @@ import {
   MeQuery,
   useLoginMutation
 } from '../generated/graphql'
-import { mapFieldErrors } from '../helpers/mapFieldError'
+import { mapFieldErrors } from '../helpers/mapFieldErrors'
 import { useCheckAuth } from '../utils/useCheckAuth'
+import { initializeApollo } from '../lib/apolloClient'
 
 const Login = () => {
   const router = useRouter()
 
   const { data: authData, loading: authLoading } = useCheckAuth()
 
-  const initialValues: LoginInput = {
-    usernameOrEmail: '',
-    password: ''
-  }
+  const initialValues: LoginInput = { usernameOrEmail: '', password: '' }
 
-  const [loginUser, { loading: _loginUserLoading, data, error }] =
-    useLoginMutation()
+  const [loginUser, { loading: _loginUserLoading, error }] = useLoginMutation()
 
   const toast = useToast()
+
   const onLoginSubmit = async (
     values: LoginInput,
     { setErrors }: FormikHelpers<LoginInput>
   ) => {
-    const res = await loginUser({
+    const response = await loginUser({
       variables: {
         loginInput: values
       },
@@ -51,17 +48,22 @@ const Login = () => {
         }
       }
     })
-    if (res.data?.login?.errors) {
-      setErrors(mapFieldErrors(res.data.login.errors))
-    } else if (res.data?.login?.user) {
-      // login successfully
+
+    if (response.data?.login.errors) {
+      setErrors(mapFieldErrors(response.data.login.errors))
+    } else if (response.data?.login.user) {
+      // register successfully
       toast({
         title: 'Chào mừng trở lại',
-        description: `${res.data.login.user.username}`,
+        description: `${response.data.login.user.username}`,
         status: 'success',
         duration: 3000,
         isClosable: true
       })
+
+      const apolloClient = initializeApollo()
+      apolloClient.resetStore()
+
       router.push('/')
     }
   }
@@ -74,17 +76,17 @@ const Login = () => {
         </Flex>
       ) : (
         <Wrapper size='small'>
-          {error && <p>Đăng nhập thất bại. Lỗi máy chủ</p>}
+          {error && <p>Đăng nhập thất bại. Lỗi hệ thống.</p>}
           <Formik initialValues={initialValues} onSubmit={onLoginSubmit}>
             {({ isSubmitting }) => (
               <Form>
-                <Box mt={4}>
-                  <InputField
-                    name='usernameOrEmail'
-                    placeholder='Tên Đăng Nhập hoặc Email'
-                    label='Tên Đăng Nhập hoặc Email'
-                  />
-                </Box>
+                <InputField
+                  name='usernameOrEmail'
+                  placeholder='Tên Đăng Nhập hoặc Email'
+                  label='Tên Đăng Nhập hoặc Email'
+                  type='text'
+                />
+
                 <Box mt={4}>
                   <InputField
                     name='password'
@@ -93,11 +95,13 @@ const Login = () => {
                     type='password'
                   />
                 </Box>
+
                 <Flex mt={2}>
                   <NextLink href='/forgot-password'>
-                    <Link ml='auto'>Forgot Password</Link>
+                    <Link ml='auto'>Quên mật khẩu</Link>
                   </NextLink>
                 </Flex>
+
                 <Button
                   type='submit'
                   colorScheme='teal'
