@@ -1,4 +1,4 @@
-require('dotenv').config()
+import dotenv from 'dotenv'
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core'
 import { ApolloServer } from 'apollo-server-express'
 import MongoStore from 'connect-mongo'
@@ -21,35 +21,45 @@ import { ProductResolver } from './resolvers/product'
 import { UserResolver } from './resolvers/user'
 import { Context } from './types/Context'
 import { buildDataLoaders } from './utils/dataLoaders'
-import { sendEmail } from './utils/sendEmail'
+// import { sendEmail } from './utils/sendEmail'
+
+dotenv.config()
 
 const main = async () => {
   const connection = await createConnection({
     type: 'postgres',
-    ...(__prod__
-      ? { url: process.env.DATABASE_URL }
-      : {
-          database: 'racroishop',
-          username: process.env.DB_USERNAME_DEV,
-          password: process.env.DB_PASSWORD_DEV
-        }),
+    host: __prod__ ? process.env.DB_HOST_PROD : process.env.DB_HOST_DEV,
+    port: __prod__
+      ? Number(process.env.DB_PORT_PROD)
+      : Number(process.env.DB_PORT_DEV),
+    database: __prod__ ? process.env.DB_NAME_PROD : process.env.DB_NAME_DEV,
+    username: __prod__
+      ? process.env.DB_USERNAME_PROD
+      : process.env.DB_USERNAME_DEV,
+    password: __prod__
+      ? process.env.DB_PASSWORD_PROD
+      : process.env.DB_PASSWORD_DEV,
     logging: true,
-    ...(__prod__
-      ? {
-          extra: {
-            ssl: {
-              rejectUnauthorized: false
-            }
-          },
-          ssl: true
-        }
-      : {}),
+    // ...(__prod__
+    //   ? {
+    //       extra: {
+    //         ssl: {
+    //           rejectUnauthorized: false
+    //         }
+    //       }
+    //       ssl: true
+    //     }
+    //   : {}),
     ...(__prod__ ? {} : { synchronize: true }),
     entities: [User, Product, Like, Category],
     migrations: [path.join(__dirname, '/migrations/*')]
   })
 
-  await sendEmail('khuong@gmail.com', '<b>Hello Khuong</b>')
+  if (connection.isConnected) {
+    console.log('Postgres Database connected')
+  }
+
+  // await sendEmail('khuong@gmail.com', '<b>Hello Khuong</b>')
 
   if (__prod__) await connection.runMigrations()
 
@@ -57,7 +67,9 @@ const main = async () => {
 
   app.use(
     cors({
-      origin: 'http://localhost:3001',
+      origin: __prod__
+        ? process.env.CORS_ORIGIN_PROD
+        : process.env.CORS_ORIGIN_DEV,
       credentials: true
     })
   )
@@ -122,4 +134,4 @@ const main = async () => {
   )
 }
 
-main().catch(error => console.log(error))
+main().catch(error => console.log('Lỗi ngay file index', error))

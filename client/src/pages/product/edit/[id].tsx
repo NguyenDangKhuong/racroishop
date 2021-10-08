@@ -112,7 +112,6 @@ const ProductEdit = () => {
 
             <Box mt={4}>
               <InputField
-                textarea
                 name='text'
                 placeholder='Text'
                 label='Text'

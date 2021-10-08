@@ -18,7 +18,7 @@ export const validateRegisterInput = (registerInput: RegisterInput) => {
       ]
     }
 
-  if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(registerInput.username))
+  if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(registerInput.username))
     return {
       message: 'Invalid username',
       errors: [

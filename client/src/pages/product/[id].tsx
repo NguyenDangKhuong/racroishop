@@ -56,7 +56,7 @@ const Product = () => {
   return (
     <Layout>
       <Heading mb={4}>{data.product.title}</Heading>
-      <Box mb={4}>{data.product.text}</Box>
+      <Box mb={4}>{data.product.description}</Box>
       <Flex justifyContent='space-between' alignItems='center'>
         {/* <ProductEditDeleteButtons
 					productId={data.product.id}
