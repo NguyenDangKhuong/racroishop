@@ -56,7 +56,7 @@ const main = async () => {
   })
 
   if (connection.isConnected) {
-    console.log('Postgres Database connected')
+    console.log('PostgresDB Connected')
   }
 
   // await sendEmail('khuong@gmail.com', '<b>Hello Khuong</b>')
