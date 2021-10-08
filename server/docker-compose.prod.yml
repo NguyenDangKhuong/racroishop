@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  nginx:
+    restart: always
+    build:
+      context: ./docker/nginx
+    ports:
+      - '81:80'
+  racroishop:
+    build:
+      context: ./docker/app
+      dockerfile: prod.Dockerfile

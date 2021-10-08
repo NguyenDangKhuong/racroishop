@@ -1,4 +1,5 @@
-FROM node
+# ARG TEN_BIEN (lấy biến khai báo bên docker compose để xài)
+FROM node:slim
 
 WORKDIR /usr/src/app
 
