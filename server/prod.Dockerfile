@@ -13,7 +13,9 @@ COPY . .
 
 RUN yarn build
 
-# COPY --from=build /usr/src/app /usr/share/nginx/html
+#multilple stage
+# FROM nginx:latest
+# COPY --from=build /app/dist /usr/share/nginx/html
 
 # ENV PM2_PUBLIC_KEY kmb3vq3uoq02mpx
 # ENV PM2_SECRET_KEY puzbowll3e9a2xy

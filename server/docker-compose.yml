@@ -10,14 +10,13 @@ services:
 
   racroishop:
     env_file: .env
-    # build:
-    # context: .
-    # args:
-    #   TEN_BIEN: ${GIA_TRI_BIEN}(có thể lấy trong file .env)
+    build:
+      context: .
+      # args:
+      #   TEN_BIEN: ${GIA_TRI_BIEN}(có thể lấy trong file .env)
     restart: unless-stopped
     depends_on:
       - postgres
-      - nginx
     ports:
       - '4000:4000'
 volumes:
