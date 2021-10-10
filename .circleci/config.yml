@@ -4,7 +4,7 @@ orbs:
   docker: circleci/docker@1.7.0
 jobs:
   build-backend:
-    machine: true
+    executor: docker/docker
     environment:
       DOCKER_IMAGE: nguyendangkhuong/racroishop
       DOCKER_TAG: latest
@@ -15,7 +15,7 @@ jobs:
       # - setup_remote_docker
       - checkout
       - run: ls
-      - run: docker-compose up
+      - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
       - store_test_results:
           path: test
     # steps:
