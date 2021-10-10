@@ -5,10 +5,16 @@ orbs:
 jobs:
   build-backend:
     machine: true
+    environment:
+      DOCKER_IMAGE: nguyendangkhuong/racroishop
+      DOCKER_TAG: latest
     working_directory: ~/repo
     # docker:
     #   - image: circleci/node
     steps:
+      - setup_remote_docker
+      - checkout
+      - run: ls
       - run: docker-compose up
     # steps:
     #   - add_ssh_keys:
