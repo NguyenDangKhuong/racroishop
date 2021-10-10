@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:alpine AS deps
+FROM node:14-alpine AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -7,14 +7,28 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM node:alpine AS builder
+FROM node:14-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
+
+ARG BACKEND_HOST_ARG
+# COPY wait-for-it.sh wait-for-it.sh 
+# COPY docker-entrypoint.sh docker-entrypoint.sh
+
+# RUN chmod +x wait-for-it.sh
+# RUN chmod +x docker-entrypoint.sh
+# RUN apk update && apk add bash
+
+# RUN ./docker-entrypoint.sh
+
+# RUN ./wait-for-it.sh localhost:4000 --strict --timeout=5 -- echo "ahihi"
+ENV BACKEND_HOST_ARG=${BACKEND_HOST_ARG}
+
 RUN yarn build
 
 # Production image, copy all the files and run next
-FROM node:alpine AS runner
+FROM node:14-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production

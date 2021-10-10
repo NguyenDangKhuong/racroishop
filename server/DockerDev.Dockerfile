@@ -15,7 +15,7 @@ RUN yarn build
 
 # ENV PM2_PUBLIC_KEY kmb3vq3uoq02mpx
 # ENV PM2_SECRET_KEY puzbowll3e9a2xy
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 USER node
 

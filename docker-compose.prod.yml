@@ -1,11 +1,14 @@
 version: '3.7'
 services:
-  racroishop:
+  backend:
     build:
-      dockerfile: prod.Dockerfile
+      context: ./server
+      dockerfile: DockerProd.Dockerfile
   nginx:
     restart: always
     build:
       context: ./docker/nginx
     ports:
       - '81:80'
+    networks:
+      - racroishop
