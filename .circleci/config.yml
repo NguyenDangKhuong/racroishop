@@ -13,9 +13,11 @@ jobs:
     #   - image: circleci/node
     steps:
       # - setup_remote_docker
-      # - checkout
+      - checkout
       - run: ls
       - run: docker-compose up
+      - store_test_results:
+          path: test
     # steps:
     #   - add_ssh_keys:
     #       fingerprints:
