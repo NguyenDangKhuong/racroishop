@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  node: circleci/node@3.0.0
+  docker: circleci/docker@1.7.0
+jobs:
+  build-backend:
+    machine: true
+    working_directory: ~/repo
+    # docker:
+    #   - image: circleci/node
+    steps:
+      - run: docker-compose up
+    # steps:
+    #   - add_ssh_keys:
+    #       fingerprints:
+    #         - '5a:30:fa:15:ba:ae:be:9c:9b:9a:61:e5:65:0d:ec:3a'
+    #   - run:
+    #       name: Access server nha
+    #       command: ssh -oStrictHostKeyChecking=no -v root@45.76.160.102 './kienthucthuvi_deploy.sh'
+workflows:
+  build-backend-nha:
+    jobs:
+      - build-backend:
+          filters:
+            branches:
+              only:
+                - config_docker
