@@ -47,6 +47,7 @@ jobs:
           path: ~/project/server
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
+          docker-context: ./server
           dockerfile: DockerProd.Dockerfile
       - docker/push:
           digest-path: /tmp/digest.txt
@@ -69,7 +70,6 @@ workflows:
   build-backend-nha:
     jobs:
       - build-push-docker:
-          #  t-build-backend
           filters:
             branches:
               only:
