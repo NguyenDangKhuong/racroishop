@@ -11,6 +11,7 @@ jobs:
       - run: ls
       - node/install:
           lts: true
+          install-npm: false
       - node/install-packages:
           cache-path: ~/project/node_modules
           app-dir: ~/project/server
