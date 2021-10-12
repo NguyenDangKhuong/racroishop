@@ -9,6 +9,7 @@ jobs:
     steps:
       - checkout
       - run: cd server
+      - run: ls
       - node/install-packages:
           pkg-manager: yarn
       - run:
