@@ -6,7 +6,7 @@ jobs:
   test-backend:
     executor:
       name: node/default
-    working_directory: ~/server
+    app-dir: ~/server
     steps:
       - checkout
       - run: ls
