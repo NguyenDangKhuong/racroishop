@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@4.7.0
   docker: circleci/docker@1.7.0
 jobs:
-  test-backend:
+  test-build-backend:
     executor:
       name: node/default
     steps:
@@ -21,17 +21,17 @@ jobs:
       - run:
           command: cd server && yarn build
           name: Run YARN BUILD
-  build-backend:
-    executor: docker/docker
-    steps:
-      - setup_remote_docker:
-          version: 19.03.13
-      - checkout
-      - run: ls
-      - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
-      - store_test_results:
-          path: test
-  build-and-push:
+  # build-backend:
+  #   executor: docker/docker
+  #   steps:
+  #     - setup_remote_docker:
+  #         version: 19.03.13
+  #     - checkout
+  #     - run: ls
+  #     - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+  #     - store_test_results:
+  #         path: test
+  build-push-docker:
     environment:
       DOCKER_IMAGE: nguyendangkhuong/racroishop
       DOCKER_TAG: latest
@@ -60,20 +60,15 @@ jobs:
     #       name: Access server nha
     #       command: ssh -oStrictHostKeyChecking=no -v root@45.76.160.102 './kienthucthuvi_deploy.sh'
 workflows:
-  test-app:
+  test-backend-hihi:
     jobs:
-      - test-backend
-  # build-backend-nha:
-  #   jobs:
-  #     - build-backend:
-  #         filters:
-  #           branches:
-  #             only:
-  #               - config_docker
-  #     - build-and-push:
-  #         requires:
-  #           - build-backend
-  #         filters:
-  #           branches:
-  #             only:
-  #               - config_docker
+      - test-build-backend
+  build-backend-nha:
+    jobs:
+      - build-push-docker:
+          requires:
+            - test-build-backend
+          filters:
+            branches:
+              only:
+                - config_docker
