@@ -3,16 +3,28 @@ orbs:
   node: circleci/node@3.0.0
   docker: circleci/docker@1.7.0
 jobs:
-  build-backend:
-    executor: docker/docker
+  test-backend:
+    executor:
+      name: node/default
+      tag: '13'
     steps:
-      - setup_remote_docker:
-          version: 19.03.13
       - checkout
-      - run: ls
-      - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
-      - store_test_results:
-          path: test
+      - run: cd server
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          command: yarn run test
+          name: Run YARN tests
+  # build-backend:
+  #   executor: docker/docker
+  #   steps:
+  #     - setup_remote_docker:
+  #         version: 19.03.13
+  #     - checkout
+  #     - run: ls
+  #     - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+  #     - store_test_results:
+  #         path: test
   build-and-push:
     environment:
       DOCKER_IMAGE: nguyendangkhuong/racroishop
@@ -42,6 +54,9 @@ jobs:
     #       name: Access server nha
     #       command: ssh -oStrictHostKeyChecking=no -v root@45.76.160.102 './kienthucthuvi_deploy.sh'
 workflows:
+  test-app:
+    jobs:
+      - test-backend
   build-backend-nha:
     jobs:
       - build-backend:
