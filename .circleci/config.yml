@@ -12,12 +12,15 @@ jobs:
           lts: true
           install-npm: false
       - node/install-packages:
-          cache-path: ~/project/server/node_modules
           app-dir: ~/project/server
           pkg-manager: yarn
+          with-cache: true
       - run:
-          command: cd server && yarn run test
+          command: cd server && yarn test
           name: Run YARN tests
+      - run:
+          command: yarn build
+          name: Run YARN BUILD
   build-backend:
     executor: docker/docker
     steps:
