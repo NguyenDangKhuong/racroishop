@@ -43,7 +43,6 @@ jobs:
       - docker/check:
           docker-username: DOCKER_LOGIN
           docker-password: DOCKER_PASSWORD
-      - docker/install-docker-compose
       - run: ls
       - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
       # - docker/build:
