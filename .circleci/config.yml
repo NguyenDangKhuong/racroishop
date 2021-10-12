@@ -12,7 +12,7 @@ jobs:
           lts: true
           install-npm: false
       - node/install-packages:
-          cache-path: ~/project/node_modules
+          cache-path: ~/project/server/node_modules
           app-dir: ~/project/server
           pkg-manager: yarn
       - run:
