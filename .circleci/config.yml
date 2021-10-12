@@ -47,6 +47,7 @@ jobs:
           path: ~/project/server
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
+          dockerfile: DockerProd.Dockerfile
       - docker/push:
           digest-path: /tmp/digest.txt
           image: $DOCKER_IMAGE
