@@ -15,16 +15,16 @@ jobs:
       - run:
           command: yarn run test
           name: Run YARN tests
-  # build-backend:
-  #   executor: docker/docker
-  #   steps:
-  #     - setup_remote_docker:
-  #         version: 19.03.13
-  #     - checkout
-  #     - run: ls
-  #     - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
-  #     - store_test_results:
-  #         path: test
+  build-backend:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker:
+          version: 19.03.13
+      - checkout
+      - run: ls
+      - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+      - store_test_results:
+          path: test
   build-and-push:
     environment:
       DOCKER_IMAGE: nguyendangkhuong/racroishop
@@ -57,17 +57,17 @@ workflows:
   test-app:
     jobs:
       - test-backend
-  build-backend-nha:
-    jobs:
-      - build-backend:
-          filters:
-            branches:
-              only:
-                - config_docker
-      - build-and-push:
-          requires:
-            - build-backend
-          filters:
-            branches:
-              only:
-                - config_docker
+  # build-backend-nha:
+  #   jobs:
+  #     - build-backend:
+  #         filters:
+  #           branches:
+  #             only:
+  #               - config_docker
+  #     - build-and-push:
+  #         requires:
+  #           - build-backend
+  #         filters:
+  #           branches:
+  #             only:
+  #               - config_docker
