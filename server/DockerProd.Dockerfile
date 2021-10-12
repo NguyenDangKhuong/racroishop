@@ -25,5 +25,5 @@ USER node
 
 EXPOSE 4000
 
-CMD [ "yarn", "start" ]
+# CMD [ "yarn", "start" ]
 # CMD ["yarn", "pm2-runtime"]
