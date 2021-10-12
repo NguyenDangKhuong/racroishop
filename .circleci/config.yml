@@ -6,11 +6,12 @@ jobs:
   test-backend:
     executor:
       name: node/default
-    app-dir: ~/server
+
     steps:
       - checkout
       - run: ls
       - node/install-packages:
+          app-dir: ~/server
           pkg-manager: yarn
       - run:
           command: yarn run test
