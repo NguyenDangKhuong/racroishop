@@ -45,7 +45,7 @@ jobs:
           docker-password: DOCKER_PASSWORD
       - run: ls
       - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
-      - run: docker push $DOCKER_IMAGE:$DOCKER_TAG
+      - run: docker push nguyendangkhuong/racroishop:latest
       # - docker/build:
       #     path: ~/project/server
       #     image: $DOCKER_IMAGE
