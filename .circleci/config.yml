@@ -40,9 +40,10 @@ jobs:
       - setup_remote_docker
       - checkout
       - docker/check:
-          docker-username: DOCKER_USER
+          docker-username: DOCKER_LOGIN
           docker-password: DOCKER_PASSWORD
       - docker/build:
+          path: ~/project/server
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
       - docker/push:
@@ -66,8 +67,7 @@ workflows:
   build-backend-nha:
     jobs:
       - build-push-docker:
-          # requires:
-          #   - test-build-backend
+          #  t-build-backend
           filters:
             branches:
               only:
