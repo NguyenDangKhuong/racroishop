@@ -66,8 +66,8 @@ workflows:
   build-backend-nha:
     jobs:
       - build-push-docker:
-          requires:
-            - test-build-backend
+          # requires:
+          #   - test-build-backend
           filters:
             branches:
               only:
