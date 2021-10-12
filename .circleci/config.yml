@@ -10,8 +10,10 @@ jobs:
       - checkout
       - run: ls
       - node/install-packages:
+          cache-path: ~/project/node_modules
           app-dir: ~/project/server
           pkg-manager: yarn
+          version: 14.0.0
       - run:
           command: yarn run test
           name: Run YARN tests
