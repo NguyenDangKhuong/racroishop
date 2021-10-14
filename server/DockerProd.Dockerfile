@@ -13,6 +13,10 @@ COPY . .
 
 RUN yarn build
 
+#multilple stage
+# FROM nginx:latest
+# COPY --from=build /app/dist /usr/share/nginx/html
+
 # ENV PM2_PUBLIC_KEY kmb3vq3uoq02mpx
 # ENV PM2_SECRET_KEY puzbowll3e9a2xy
 ENV NODE_ENV=production
@@ -21,5 +25,5 @@ USER node
 
 EXPOSE 4000
 
-CMD [ "yarn", "start" ]
+# CMD [ "yarn", "start" ]
 # CMD ["yarn", "pm2-runtime"]

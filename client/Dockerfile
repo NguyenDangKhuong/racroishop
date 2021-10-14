@@ -11,6 +11,20 @@ FROM node:14-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
+
+ARG BACKEND_HOST_ARG
+# COPY wait-for-it.sh wait-for-it.sh 
+# COPY docker-entrypoint.sh docker-entrypoint.sh
+
+# RUN chmod +x wait-for-it.sh
+# RUN chmod +x docker-entrypoint.sh
+# RUN apk update && apk add bash
+
+# RUN ./docker-entrypoint.sh
+
+# RUN ./wait-for-it.sh localhost:4000 --strict --timeout=5 -- echo "ahihi"
+ENV BACKEND_HOST_ARG=${BACKEND_HOST_ARG}
+
 RUN yarn build
 
 # Production image, copy all the files and run next

@@ -119,7 +119,8 @@ const main = async () => {
       connection,
       dataLoaders: buildDataLoaders()
     }),
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()]
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    introspection: true
   })
 
   await apolloServer.start()
