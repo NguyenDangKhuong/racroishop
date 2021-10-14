@@ -31,34 +31,36 @@ jobs:
   #     - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
   #     - store_test_results:
   #         path: test
-  build-push-docker:
-    environment:
-      DOCKER_IMAGE: nguyendangkhuong/racroishop
-      DOCKER_TAG: latest
-    executor: docker/docker
-    steps:
-      - setup_remote_docker:
-          version: 19.03.13
-      - checkout
-      - docker/check:
-          docker-username: DOCKER_LOGIN
-          docker-password: DOCKER_PASSWORD
-      - run: ls
-      - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
-      - run: docker push nguyendangkhuong/racroishop:latest
-      # - docker/build:
-      #     path: ~/project/server
-      #     image: $DOCKER_IMAGE
-      #     tag: $DOCKER_TAG
-      #     docker-context: ./server
-      #     dockerfile: DockerProd.Dockerfile
-      # - docker/push:
-      #     digest-path: /tmp/digest.txt
-      #     image: $DOCKER_IMAGE
-      #     tag: $DOCKER_TAG
-      # - run:
-      #     command: |
-      #       echo "Digest is: $(</tmp/digest.txt)"
+  # build-push-docker:
+  #   environment:
+  #     DOCKER_IMAGE: nguyendangkhuong/racroishop
+  #     DOCKER_TAG: latest
+  #   executor: docker/docker
+  #   image:
+  #   steps:
+  #     - setup_remote_docker:
+  #         version: 19.03.13
+  #     - checkout
+  #     - docker/check:
+  #         docker-username: DOCKER_LOGIN
+  #         docker-password: DOCKER_PASSWORD
+  #     - run: ls
+  #     - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+  #     - run: docker ps
+  #     - run: docker push nguyendangkhuong/racroishop:latest
+  #     - docker/build:
+  #         path: ~/project/server
+  #         image: $DOCKER_IMAGE
+  #         tag: $DOCKER_TAG
+  #         docker-context: ./server
+  #         dockerfile: DockerProd.Dockerfile
+  #     - docker/push:
+  #         digest-path: /tmp/digest.txt
+  #         image: $DOCKER_IMAGE
+  #         tag: $DOCKER_TAG
+  #     - run:
+  #         command: |
+  #           echo "Digest is: $(</tmp/digest.txt)"
   deploy:
     executor: docker/docker
     steps:
@@ -72,10 +74,10 @@ workflows:
   test-backend-hihi:
     jobs:
       - test-build-backend
-  build-backend-nha:
-    jobs:
-      - build-push-docker:
-          filters:
-            branches:
-              only:
-                - config_docker
+  # build-backend-nha:
+  #   jobs:
+  #     - build-push-docker:
+  #         filters:
+  #           branches:
+  #             only:
+  #               - config_docker

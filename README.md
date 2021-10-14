@@ -20,3 +20,4 @@
 **docker build**
 
 > docker build -t {{development/production}-tag}(tên container đặt tên gì cũng đc) -f ./docker/{dev/prod}.Dockerfile .
+> docker build -t production -f DockerProd.DockerFile .
