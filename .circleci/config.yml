@@ -21,47 +21,25 @@ jobs:
       - run:
           command: cd server && yarn build
           name: Run YARN BUILD
-  # build-backend:
-  #   executor: docker/docker
+  # test-build-frontend:
+  #   executor:
+  #     name: node/default
   #   steps:
-  #     - setup_remote_docker:
-  #         version: 19.03.13
   #     - checkout
-  #     - run: ls
-  #     - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
-  #     - store_test_results:
-  #         path: test
-  # build-push-docker:
-  #   environment:
-  #     DOCKER_IMAGE: nguyendangkhuong/racroishop
-  #     DOCKER_TAG: latest
-  #   executor: docker/docker
-  #   image:
-  #   steps:
-  #     - setup_remote_docker:
-  #         version: 19.03.13
-  #     - checkout
-  #     - docker/check:
-  #         docker-username: DOCKER_LOGIN
-  #         docker-password: DOCKER_PASSWORD
-  #     - run: ls
-  #     - run: docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
-  #     - run: docker ps
-  #     - run: docker push nguyendangkhuong/racroishop:latest
-  #     - docker/build:
-  #         path: ~/project/server
-  #         image: $DOCKER_IMAGE
-  #         tag: $DOCKER_TAG
-  #         docker-context: ./server
-  #         dockerfile: DockerProd.Dockerfile
-  #     - docker/push:
-  #         digest-path: /tmp/digest.txt
-  #         image: $DOCKER_IMAGE
-  #         tag: $DOCKER_TAG
+  #     - node/install:
+  #         lts: true
+  #         install-npm: false
+  #     - node/install-packages:
+  #         app-dir: ~/project/server
+  #         pkg-manager: yarn
+  #         with-cache: true
   #     - run:
-  #         command: |
-  #           echo "Digest is: $(</tmp/digest.txt)"
-  deploy:
+  #         command: cd server && yarn test
+  #         name: Run YARN tests
+  #     - run:
+  #         command: cd server && yarn build
+  #         name: Run YARN BUILD
+  deploy-backend:
     executor: docker/docker
     steps:
       - add_ssh_keys:
@@ -74,10 +52,12 @@ workflows:
   test-backend-hihi:
     jobs:
       - test-build-backend
-  # build-backend-nha:
-  #   jobs:
-  #     - build-push-docker:
-  #         filters:
-  #           branches:
-  #             only:
-  #               - config_docker
+  build-backend-nha:
+    jobs:
+      - deploy-backend:
+          requires:
+            - test-build-backend
+          filters:
+            branches:
+              only:
+                - config_docker
