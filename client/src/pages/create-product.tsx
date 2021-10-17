@@ -104,7 +104,14 @@ const CreateProduct = () => {
                   ))}
                 />
               </Box>
-
+              <Box mt={4}>
+                <InputField
+                  name='images'
+                  placeholder='Hình sản phẩm'
+                  label='Hình sản phẩm'
+                  type='upload'
+                />
+              </Box>
               <Flex justifyContent='space-between' alignItems='center' mt={4}>
                 <Button
                   type='submit'

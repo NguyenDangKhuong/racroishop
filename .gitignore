@@ -105,7 +105,7 @@ dist
 # ts build output
 server/dist
 server/node_modules
-server/ormconfig.json
+# server/ormconfig.json
 server/pgdata
 *.txt
 

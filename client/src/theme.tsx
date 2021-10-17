@@ -10,10 +10,12 @@ const breakpoints = createBreakpoints({
   xl: '80em'
 })
 
+const colors = {
+  shopee: '#fb5a30'
+}
+
 const theme = extendTheme({
-  colors: {
-    black: '#16161D'
-  },
+  colors,
   fonts,
   breakpoints
 })

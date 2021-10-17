@@ -23,7 +23,7 @@ import { Context } from './types/Context'
 import { buildDataLoaders } from './utils/dataLoaders'
 // import { sendEmail } from './utils/sendEmail'
 
-dotenv.config()
+dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
 const main = async () => {
   const connection = await createConnection({

@@ -55,8 +55,6 @@ workflows:
   build-backend-nha:
     jobs:
       - deploy-backend:
-          requires:
-            - test-build-backend
           filters:
             branches:
               only:

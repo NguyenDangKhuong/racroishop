@@ -47,8 +47,6 @@ function createApolloClient(headers: IncomingHttpHeaders | null = null) {
     })
   }
 
-  console.log('http://backend:4000')
-  console.log('BBBBB', process.env)
   const httpLink = new HttpLink({
     // uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
     uri:
