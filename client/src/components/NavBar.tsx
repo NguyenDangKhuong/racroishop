@@ -120,6 +120,7 @@ const Navbar = () => {
               onClick={logoutUser}
               isLoading={useLogoutMutationLoading}
               w={200}
+              cursor='pointer'
               _hover={{
                 background: 'shopee',
                 color: 'white'
@@ -153,7 +154,9 @@ const Navbar = () => {
       </Flex>
       <Flex maxW={1200} justifyContent='space-between' align='center' m='auto'>
         <NextLink href='/'>
-          <Heading color='white'>Rắc Rối Shop</Heading>
+          <Heading cursor='pointer' color='white'>
+            Rắc Rối Shop
+          </Heading>
         </NextLink>
         <Box w='60%'>
           <Input bg='white' placeholder='Tìm kiếm sản phẩm' />

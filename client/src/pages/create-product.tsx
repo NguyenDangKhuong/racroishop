@@ -1,5 +1,15 @@
 import { useCheckAuth } from '../utils/useCheckAuth'
-import { Flex, Spinner, Box, Button } from '@chakra-ui/react'
+import {
+  Flex,
+  Spinner,
+  Box,
+  Button,
+  Wrap,
+  WrapItem,
+  Center,
+  Image,
+  Icon
+} from '@chakra-ui/react'
 import Layout from '../components/Layout'
 import { Formik, Form } from 'formik'
 import InputField from '../components/InputField'
@@ -10,9 +20,16 @@ import {
   useCreateProductMutation
 } from '../generated/graphql'
 import router from 'next/router'
+import { useUploadImage, useDeleteImage } from '../utils/useUploadImage'
+import { MdCancel } from 'react-icons/md'
 
 const CreateProduct = () => {
   const { data: authData, loading: authLoading } = useCheckAuth()
+  const {
+    uploadImageUrls,
+    renderInputUpload,
+    setUploadImageUrls
+  } = useUploadImage()
 
   const { data: categoriesData } = useCategoriesQuery()
 
@@ -104,14 +121,39 @@ const CreateProduct = () => {
                   ))}
                 />
               </Box>
-              <Box mt={4}>
-                <InputField
-                  name='images'
-                  placeholder='Hình sản phẩm'
-                  label='Hình sản phẩm'
-                  type='upload'
-                />
-              </Box>
+              <Box mt={4}>{renderInputUpload}</Box>
+              {uploadImageUrls && (
+                <Wrap mt='5'>
+                  {uploadImageUrls.map(({ url, public_id }, index) => (
+                    <WrapItem key={index}>
+                      <Center
+                        w='200px'
+                        h='300px'
+                        bg='#e7e7e7'
+                        position='relative'
+                      >
+                        <Image src={url}></Image>
+                        <Icon
+                          position='absolute'
+                          top='1'
+                          right='1'
+                          fontSize='30'
+                          cursor='pointer'
+                          as={MdCancel}
+                          onClick={() => {
+                            useDeleteImage(public_id)
+                            setUploadImageUrls(
+                              uploadImageUrls.filter(
+                                (item: any) => item.public_id !== public_id
+                              )
+                            )
+                          }}
+                        ></Icon>
+                      </Center>
+                    </WrapItem>
+                  ))}
+                </Wrap>
+              )}
               <Flex justifyContent='space-between' alignItems='center' mt={4}>
                 <Button
                   type='submit'

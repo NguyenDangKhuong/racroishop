@@ -21,6 +21,7 @@ import { ProductResolver } from './resolvers/product'
 import { UserResolver } from './resolvers/user'
 import { Context } from './types/Context'
 import { buildDataLoaders } from './utils/dataLoaders'
+import routes from './app/routes'
 // import { sendEmail } from './utils/sendEmail'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
@@ -73,6 +74,7 @@ const main = async () => {
       credentials: true
     })
   )
+  app.use('/', routes)
 
   // Session/Cookie store
   const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME_DEV_PROD}:${process.env.SESSION_DB_PASSWORD_DEV_PROD}@racroishop.c68ga.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`

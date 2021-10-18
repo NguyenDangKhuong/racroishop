@@ -1,6 +1,6 @@
 {
   "type": "postgres",
-  "host": "localhost",
+  "host": "45.76.160.102",
   "port": 5432,
   "username": "postgres",
   "password": "khuongpassword",
