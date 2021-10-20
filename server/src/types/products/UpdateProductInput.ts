@@ -1,6 +1,8 @@
-import { Field, ID, InputType } from 'type-graphql'
+import { Field, ID, InputType, ObjectType } from 'type-graphql'
+import { GraphQLJSONObject } from 'graphql-type-json'
 
 @InputType()
+@ObjectType()
 export class UpdateProductInput {
   @Field(_type => ID)
   id: number
@@ -16,4 +18,42 @@ export class UpdateProductInput {
 
   @Field()
   categoryId: number
+
+  @Field(() => ObjectType)
+  images: string[]
 }
+
+// custom type
+// {
+//     "data": {
+//     "project": {
+//       "name": "Project 1"
+//       languages{
+//           names{
+//              "Python"
+//              "HTML"
+//               }
+//             }
+//          }
+//         }
+//        }
+
+// const ProjectType = new GraphQLObjectType({
+//   name: 'Project',
+//   fields: () => ({
+//     id: { type: GraphQLID },
+//     name: { type: GraphQLString },
+//     subtitle: { type: GraphQLString },
+//     summary: { type: GraphQLString },
+//     languages: {
+//       // change this type to LanguageType
+//       type: new GraphQLList(LanguageType),
+//       resolve(parent, args) {
+//         // No need to lodash here
+//         return languages.filter(language => {
+//           return parent.languageId.includes(language.id)
+//         })
+//       }
+//     }
+//   })
+// })
