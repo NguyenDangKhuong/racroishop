@@ -88,19 +88,23 @@ const Navbar = () => {
         </PopoverTrigger>
         <PopoverContent w={200}>
           <Flex flexDirection='column' color='black'>
-            <NextLink href='/create-product'>
-              <Link
-                p={3}
-                w={200}
-                _hover={{
-                  background: 'shopee',
-                  color: 'white'
-                }}
-              >
-                Tạo sản phẩm
-              </Link>
-            </NextLink>
-            <Divider />
+            {data?.me?.email === 'nguyendangkhuong96@gmail.com' && (
+              <>
+                <NextLink href='/create-product'>
+                  <Link
+                    p={3}
+                    w={200}
+                    _hover={{
+                      background: 'shopee',
+                      color: 'white'
+                    }}
+                  >
+                    Tạo sản phẩm
+                  </Link>
+                </NextLink>
+                <Divider />
+              </>
+            )}
             <NextLink href=''>
               <Link
                 p={3}

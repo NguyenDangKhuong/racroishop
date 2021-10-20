@@ -9,11 +9,7 @@ import {
   createStandaloneToast
 } from '@chakra-ui/react'
 import { FiFile } from 'react-icons/fi'
-
-const backendUrl =
-  process.env.NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_BACK_END_HOST_PROD
-    : process.env.NEXT_PUBLIC_BACK_END_HOST_DEV
+import { BACKEND_HOST } from '../helpers/constants'
 
 export const useUploadImage = () => {
   const [uploadImageUrls, setUploadImageUrls] = useState([])
@@ -40,7 +36,7 @@ export const useUploadImage = () => {
               const files = e.target.files || []
               Array.from(files).map(file => data.append('files', file))
               setLoading(true)
-              fetch(`${backendUrl}/api/image/upload`, {
+              fetch(`${BACKEND_HOST}/api/image/upload`, {
                 method: 'post',
                 body: data
               })
@@ -65,7 +61,7 @@ export const useUploadImage = () => {
 
 export const useDeleteImage = (publicId: string) => {
   const toast = createStandaloneToast()
-  fetch(`${backendUrl}/api/image/delete`, {
+  fetch(`${BACKEND_HOST}/api/image/delete`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'

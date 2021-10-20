@@ -14,6 +14,7 @@ import { IncomingHttpHeaders } from 'http'
 import fetch from 'isomorphic-unfetch'
 import { onError } from '@apollo/client/link/error'
 import Router from 'next/router'
+import { __prod__, GRAPHQL_HOST } from '../helpers/constants'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
@@ -49,10 +50,7 @@ function createApolloClient(headers: IncomingHttpHeaders | null = null) {
 
   const httpLink = new HttpLink({
     // uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
-    uri:
-      process.env.NODE_ENV === 'production'
-        ? process.env.NEXT_PUBLIC_BACK_END_GRAPHQL_PROD
-        : process.env.NEXT_PUBLIC_BACK_END_GRAPHQL_DEV,
+    uri: GRAPHQL_HOST,
     credentials: 'include', // Additional fetch() options like `credentials` or `headers`
     fetch: enhancedFetch
   })
