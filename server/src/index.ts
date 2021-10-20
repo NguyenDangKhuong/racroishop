@@ -89,6 +89,7 @@ const main = async () => {
 
   app.set('trust proxy', 1)
 
+  // muốn dùng session trên thì phải sửa setting graphql là "include" mới lưu cookie đc
   app.use(
     session({
       name: COOKIE_NAME,
