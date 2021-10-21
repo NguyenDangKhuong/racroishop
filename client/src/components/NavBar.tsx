@@ -88,7 +88,7 @@ const Navbar = () => {
         </PopoverTrigger>
         <PopoverContent w={200}>
           <Flex flexDirection='column' color='black'>
-            {data?.me?.email === 'nguyendangkhuong96@gmail.com' && (
+            {data?.me?.role === 0 && (
               <>
                 <NextLink href='/create-product'>
                   <Link
@@ -119,10 +119,9 @@ const Navbar = () => {
             </NextLink>
             <Divider />
             <Box
-              pointerEvents='auto'
               p={3}
               onClick={logoutUser}
-              isLoading={useLogoutMutationLoading}
+              // isLoading={useLogoutMutationLoading}
               w={200}
               cursor='pointer'
               _hover={{

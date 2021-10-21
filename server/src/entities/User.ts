@@ -29,7 +29,7 @@ export class User extends BaseEntity {
   email!: string
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   role!: number
 
   @Column()

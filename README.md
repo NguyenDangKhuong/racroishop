@@ -2,6 +2,10 @@
 
 ## CLIENT
 
+1.để chạy code gen ra graphql
+
+> yarn codegen
+
 ## SERVER
 
 **run docker development**
