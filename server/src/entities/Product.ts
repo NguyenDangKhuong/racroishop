@@ -12,7 +12,6 @@ import {
 import { Category } from './Category'
 import { Like } from './Like'
 import { User } from './User'
-import { GraphQLJSONObject } from 'graphql-type-json'
 
 @ObjectType()
 @Entity()
@@ -59,9 +58,9 @@ export class Product extends BaseEntity {
   @Field()
   likeType!: number
 
-  @Field(() => ObjectType)
-  @Column('jsonb', { array: true, nullable: true })
-  images: string[]
+  @Field(() => [String])
+  @Column('text', { array: true, nullable: true })
+  images: [string]
 
   @Field()
   @CreateDateColumn({ type: 'timestamptz' })

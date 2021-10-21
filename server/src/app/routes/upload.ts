@@ -19,12 +19,12 @@ cloudinary.v2.config({
 //upload nhiều file cùng lúc
 route.post('/upload', upload.array('files', 10), async (req, res) => {
   try {
-    const imageFiles = req.files
+    const imageFiles = (req as any).files
     //Check if files exist
     if (!imageFiles)
       return res.status(400).json({ message: 'Không có hình được thêm!' })
     //map through images and create a promise array using cloudinary upload function
-    const multiplePicturePromise = Array.from(imageFiles).map(image =>
+    const multiplePicturePromise = [...imageFiles].map(image =>
       cloudinary.v2.uploader.upload(
         image.path,
         {

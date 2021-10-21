@@ -13,4 +13,7 @@ export class CreateProductInput {
 
   @Field()
   categoryId: number
+
+  @Field(() => [String])
+  images: string[]
 }

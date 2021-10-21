@@ -73,7 +73,7 @@ export class ProductResolver {
   @UseMiddleware(checkAuth)
   async createProduct(
     @Arg('createProductInput')
-    { title, description, price, categoryId }: CreateProductInput,
+    { title, description, price, categoryId, images }: CreateProductInput,
     @Ctx() { req }: Context
   ): Promise<ProductMutationResponse> {
     try {
@@ -82,6 +82,7 @@ export class ProductResolver {
         description,
         price,
         categoryId,
+        images,
         userId: req.session.userId
       })
 

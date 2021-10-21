@@ -1,5 +1,4 @@
 import { Field, ID, InputType, ObjectType } from 'type-graphql'
-import { GraphQLJSONObject } from 'graphql-type-json'
 
 @InputType()
 @ObjectType()
@@ -19,7 +18,7 @@ export class UpdateProductInput {
   @Field()
   categoryId: number
 
-  @Field(() => ObjectType)
+  @Field(() => [String])
   images: string[]
 }
 
