@@ -2,7 +2,7 @@
 
 ## CLIENT
 
-1.để chạy code gen ra graphql
+1.gennerate graphql file in client
 
 > yarn codegen
 
